@@ -1,0 +1,3 @@
+#!/bin/bash
+grep -n -i "$1" $HOME/.config/chromium/Default/Bookmarks | less -p"$1" 
+

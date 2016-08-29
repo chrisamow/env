@@ -1,0 +1,4 @@
+sudo apt-get -y install openssh-server python-software-properties rar vim tmux curl wget zsh git xclip dos2unix python-psycopg2
+
+# has prompts
+# ubuntu-restricted-extras 

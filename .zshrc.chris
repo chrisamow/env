@@ -1,0 +1,68 @@
+#call this from the end of .zshrc by doing a 'source ~/.zshrc.chris'
+
+# install oh-my-zsh (one of these)
+# curl -L http://install.ohmyz.sh | sh
+# wget --no-check-certificate http://install.ohmyz.sh -O - | sh
+
+# to prevent oh-my-zsh from update prompt (and saying no), 
+# this must be in .zshrc before the source $ZSH/oh-my-zsh.sh
+# DISABLE_AUTO_UPDATE=true
+
+# for cygwin, in addition to git plugin, also need for auto ssh key passing
+# plugins=(git ssh-agent)
+
+#nice to have a visual cue separating prompt and command
+PROMPT+="%{$fg[yellow]%}★ %{$reset_color%}"
+#
+#export RPROMPT="[%?] %*" 
+export RPROMPT="%{$fg_bold[yellow]%}[%?]%{$reset_color%} %{$fg[yellow]%}%*%{$reset_color%}"
+
+#mount network shares using cifs, like...
+
+#path changes?
+
+#a year's worth
+SAVEHIST=10000
+HISTSIZE=10000
+
+# save the time and how long a command ran
+setopt EXTENDED_HISTORY
+
+# allows you to type Bash style comments on your command line
+# # good 'ol Bash
+setopt interactivecomments
+
+alias tree="ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'"
+alias 'dus=du -sckx * | sort -nr'      #directories sorted by size
+
+PATH+=":$HOME/bin"
+if [ -d "$HOME/anaconda/bin" ]; then 
+	#PATH+=":$HOME/anaconda/bin"
+        export PATH=$HOME/anaconda/bin:$PATH
+	echo "Anaconda found, adding to path"; 
+fi;
+
+if [[ "$(uname)" == "Darwin" ]]; then
+        echo Mac OS X customizations
+elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+        echo Linux customizations
+        alias clipboard='xclip -se c'
+        alias killg='killall gvfsd-afp-browse; killall gvfsd-afp'
+elif [[ "$(expr substr $(uname -s) 1 6)" == "CYGWIN" ]]; then
+        echo Cygwin customizations
+        #assumed to have an ~/anaconda/ with
+        #lrwxrwxrwx 1 chris None 32 Oct  1 22:40 bin -> /cygdrive/c/Users/chris/Anaconda
+        alias clipboard='clip'
+        alias sudo=''
+        #allow completion on unc paths (won't work on server level or c$)
+        #//xtra/us/devi[tab] works but not //xtra/u[tab]
+        zstyle ':completion:*' accept-exact-dirs true
+        local winanaconda=$(cygpath $USERPROFILE)
+        winanaconda=$winanaconda/anaconda
+        echo $winanaconda         
+        if [ -d "$winanaconda" ]; then 
+            export PATH=$winanaconda:$winanaconda/scripts:$PATH
+            echo "Anaconda found, adding to path"; 
+        fi
+fi
+

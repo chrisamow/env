@@ -1,0 +1,8 @@
+#!/bin/sh
+#TODO: won't work with only a base url (no document) try aust.craigslist.org
+
+f=`echo "$1" | awk -F"/" '{print $NF }'`    #base filename without path
+f=${f%%.*}  #remove extension
+#echo $1
+echo "[InternetShortcut]\r\nURL="$1 > $f.url
+echo "wrote to: " $f.url

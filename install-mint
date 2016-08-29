@@ -1,0 +1,5 @@
+#extra things to make mint less painful to use
+
+#let windows internet shortcuts be made easily by right click in caja
+cp ~/develop/src/misc/shortcut.url ~/Templates
+

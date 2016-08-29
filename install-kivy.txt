@@ -1,0 +1,8 @@
+conda install -c tlatorre pygame=1.9.2
+rehash
+sudo apt-get install python-opengl
+#for ubuntu 12 to 14
+sudo apt-get install python-gst0.10 python-enchant gstreamer0.10-plugins-good python-dev
+sudo apt-get install libgl1-mesa-dev-lts-quantal libgles2-mesa-dev-lts-quantal
+pip install kivy
+

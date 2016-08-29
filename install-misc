@@ -1,0 +1,20 @@
+#!/usr/bin/zsh
+#doesn't work on cygwin, sudo alias not being read
+
+#youtube downloader - the one in repositories is very old
+sudo wget --no-check-certificate https://yt-dl.org/latest/youtube-dl -O /usr/local/bin/youtube-dl
+sudo chmod a+x /usr/local/bin/youtube-dl
+hash -r
+
+#good option quote downloader
+#https://github.com/makmac213/python-google-option-chain
+
+wget -q -O - http://archive.getdeb.net/getdeb-archive.key | sudo apt-key add -
+sudo sh -c 'echo "deb http://archive.getdeb.net/ubuntu $(lsb_release -cs)-getdeb apps" >> /etc/apt/sources.list.d/getdeb.list'
+sudo apt-get update
+sudo apt-get install wxhexeditor
+sudo apt-get install python-mysqldb
+sudo apt-get install mate-themes
+
+#for samsung galaxy s4 usb access
+sudo apt-get install mtp-tools

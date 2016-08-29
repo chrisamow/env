@@ -1,0 +1,96 @@
+
+
+https://bbs.linuxdistrocommunity.com/discussion/779/redirect/p1
+
+USB Tethering on Linux
+ ArmageddonArmageddon Banned
+February 2013 in Tips & Tricks
+I've seen people asking about USB Tethering on Linux and they were having problems with it. Well, turns out it is so much simpler than it looks/seems.
+
+Before you start, make sure you have chosen the option of USB Tethering on the phone !
+
+First of all, make sure you have module usbnet loaded.
+
+    modprobe usbnet
+
+
+Yes, that's it to load the module if it's not loaded.
+
+Secondly, if you are using ifconfig you simply do:
+
+    ifconfig -a
+
+
+You should see a usb0 interface. If you are using something else, work accordingly. I use ifconfig.
+
+Anyway, next step is putting interface up and getting IPs.
+
+    ifconfig usb0 up
+    dhcpcd usb0
+
+
+And that's it boys and girls, your internet is working.
+
+----------
+
+these additional steps may be needed (?)
+http://tareqalam.com/2015/01/09/usb-tethering-ubuntu-server-14-04/
+
+1. connect your mobile with wifi
+
+2. connect mobile using usb to your laptop where ubuntu server is installed
+
+go to your android mobile settings ->wireless & networks -> more ->Tithering & portable hotspot
+press USB tethering
+3. in command line in ur pc:
+
+    ifconfig usb0 up
+
+    dhcpclient usb0
+
+then thats it!
+
+you should be connected to internet via your phone
+
+
+
+
+
+=============================================================
+
+another take
+http://crunchbang.org/forums/viewtopic.php?id=37507
+
+The gist is that we use the usbnet driver and the Linux RNDIS implementation (Remote Network Driver Interface Specification) to spawn another network interface usbX, over which we can establish a network connection as usual.
+First, load the necessary kernel modules:
+    $ modprobe usbnet
+    $ modprobe rndis_host
+
+Second, connect the phone via USB and enable USB tethering, for example: Settings > Wireless and networks > More settings > Tethering and portable hotspot > check the "USB tethering entry". In my case, Android somehow fails to detect the computer properly when the USB cable was already plugged in before turning the computer on...oh noes.
+
+Third, run
+    $ ip link
+You should see a device named usbX, where X is a number, that is an entry like this:
+    $ ip link
+    # ...
+    7: usb0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 50
+    link/ether 02:06:06:52:32:31 brd ff:ff:ff:ff:ff:ff
+
+Fourth, establish a network connection using DHCP, for example using network-manager. If you don't use any network manager, dhclient is good for this (from the 'isc-dhcp-client' package):
+    $ dhclient usb0
+Check whether the routing table has been set up correctly, for example:
+    $ route
+    Kernel IP routing table
+    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+    default         192.168.42.129  0.0.0.0         UG    0      0        0 usb0
+    192.168.42.0    *               255.255.255.0   U     0      0        0 usb0
+
+You should now be able to connect to the internet. To release the DHCP lease after having ended the tethering, do
+    $ dhclient -r usb0
+
+If all went well, you might want to load the kernel modules at boot time: Add these lines to /etc/modules:
+usbnet
+rndis_host
+Done.
+
+
